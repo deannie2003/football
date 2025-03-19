@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .login-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 15px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .links {
+            margin-top: 15px;
+        }
+        .links a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 14px;
+            display: block;
+            margin-top: 5px;
+        }
+        .guest-btn {
+            background-color: #28a745;
+        }
+        .guest-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Đăng Nhập</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Tên đăng nhập" required>
+            <input type="password" id="password" placeholder="Mật khẩu" required>
+            <button type="submit" class="btn">Đăng nhập</button>
+            <p class="error" id="errorMessage"></p>
+        </form>
+        <div class="links">
+            <a href="forgotpw.html">Quên mật khẩu?</a>
+            <a href="signup.html">Đăng ký tài khoản</a>
+            <a href="changepw.html">Đổi mật khẩu</a>
+        </div>
+        <button class="btn guest-btn" id="guestLogin">Tiếp tục với Khách</button>
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+        
+            let username = document.getElementById("username").value;   
+            let password = document.getElementById("password").value;
+            let errorMessage = document.getElementById("errorMessage");
+        
+            let response = await fetch("http://localhost:8080/signin", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            });
+        
+            let data = await response.json();
+            if (data.success) {
+                localStorage.setItem("userRole", "Member"); // Lưu trạng thái Member
+                alert(data.message);
+                window.location.href = "upload.html"; 
+            } else {
+                errorMessage.textContent = data.message;    
+            }
+        });
+        
+        // Xử lý khi click "Tiếp tục với Khách"
+        document.getElementById("guestLogin").addEventListener("click", function() {
+            localStorage.setItem("userRole", "Guest"); // Lưu trạng thái Guest
+            window.location.href = "upload.html"; // Chuyển đến trang upload
+        });
+    
+        // Kiểm tra trạng thái người dùng khi tải trang
+        document.addEventListener("DOMContentLoaded", function() {
+            let userRole = localStorage.getItem("userRole");
+            if (userRole === "Guest") {
+                console.log("Chế độ khách được kích hoạt.");
+            } else if (userRole === "Member") {
+                console.log("Đăng nhập bằng tài khoản thành viên.");
+            }
+        });
+    </script>
+    
+        
+</body>
+</html>

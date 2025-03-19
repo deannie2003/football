@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đổi Mật Khẩu</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        input { padding: 10px; width: 300px; margin-bottom: 10px; }
+        button { padding: 10px 20px; cursor: pointer; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Đổi Mật Khẩu</h2>
+    <p>Vui lòng nhập thông tin để đổi mật khẩu.</p>
+    
+    <input type="text" id="username" placeholder="Tên tài khoản (Username)" required><br>
+    <input type="password" id="oldPassword" placeholder="Mật khẩu cũ" required><br>
+    <input type="password" id="newPassword" placeholder="Mật khẩu mới" required><br>
+    <input type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu mới" required><br>
+
+    <button onclick="changePassword()">Đổi Mật Khẩu</button>
+    <button onclick="goToLogin()">Quay về Đăng Nhập</button>
+    
+    <p id="responseMessage"></p>
+
+    <script>
+        function changePassword() {
+            var username = document.getElementById("username").value;
+            var oldPassword = document.getElementById("oldPassword").value;
+            var newPassword = document.getElementById("newPassword").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (!oldPassword || !newPassword || !confirmPassword) {
+                document.getElementById("responseMessage").innerText = "Vui lòng nhập đầy đủ thông tin!";
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                document.getElementById("responseMessage").innerText = "Mật khẩu xác nhận không khớp!";
+                return;
+            }
+
+            fetch('/api/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: username,
+                    oldPassword: oldPassword,
+                    newPassword: newPassword
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("responseMessage").innerText = data.message;
+            })
+            .catch(error => console.error('Lỗi:', error));
+        }
+
+        function goToLogin() {
+            window.location.href = "signin.html"; // Đổi thành trang đăng nhập của bạn
+        }
+    </script>
+</body>
+</html>

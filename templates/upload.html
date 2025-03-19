@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <title>Upload Video</title>
+  </head>
+  <body  class="bg-green-300">
+    <div class="container mx-auto mt-20 max-w-2xl">
+      <div class="flex items-center justify-center">
+        <h1 class="font-bold text-4xl mb-10">Upload Video</h1>
+      </div>
+      <form
+        id="uploadForm"
+        action="/process"
+        method="post"
+        enctype="multipart/form-data"
+        class="flex flex-col items-center justify-center px-4 py-10 rounded-xl bg-green-900 shadow-lg"
+      >
+        <img
+          class="w-24 h-24 object-cover mb-4"
+          src="./templates/assets/images/upload.png"
+          alt=""
+        />
+        <input
+          type="file"
+          hidden
+          id="fileInput"
+          name="video"
+          accept="video/mp4"
+        />
+        <button
+          type="button"
+          class="mb-4 bg-green-700 text-lg py-2 px-6 font-semibold rounded-sm shadow-md cursor-pointer"
+          onclick="document.getElementById('fileInput').click()"
+        >
+          <div class="flex items-center gap-2">
+            <img
+              class="w-6 h-6 object-cover"
+              src="./templates/assets/images/attachment.svg"
+              alt="Upload"
+            />
+            <span class="uppercase">Select Video</span>
+          </div>
+        </button>
+      </form>
+    </div>
+
+    <script>
+      document
+        .getElementById("fileInput")
+        .addEventListener("change", function () {
+          if (this.files.length > 0) {
+            document.getElementById("uploadForm").submit();
+          }
+        });
+    </script>
+  </body>
+</html>
